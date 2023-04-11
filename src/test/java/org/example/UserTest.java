@@ -1,5 +1,6 @@
 package org.example;
 
+import org.example.exceptions.InvalidUserDataException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -7,40 +8,44 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserTest {
 
     @Test
-    public void shouldCheckLoginEmailNotNull() {
+    public void shouldCheckLoginIsValid() throws InvalidUserDataException {
         String login = "JohnConnor";
         String email = "johnconnor@gmail.com";
-        User expected = new User(login, email);
-        assertNotNull(expected.getEmail(), expected.getLogin());
+        User actual = new User(login, email);
+        assertEquals("JohnConnor", actual.getLogin());
+    }
+
+    @Test
+    public void shouldCheckEmailIsValid() throws InvalidUserDataException {
+        String login = "JohnConnor";
+        String email = "johnconnor@gmail.com";
+        User actual = new User(login, email);
+        assertEquals("johnconnor@gmail.com", actual.getEmail());
     }
 
     @Test
     public void shouldCheckUserCreated() {
-        User expected = new User();
-        assertNotNull(expected);
+        User actual = new User();
+        assertNull(actual.getLogin());
+        assertNull(actual.getEmail());
     }
 
     @Test
-    public void shouldCheckEmailIsCorrect() {
-        String login1 = "JohnConnor";
+    public void shouldCheckEmailIsCorrect() throws InvalidUserDataException {
+        String login = "JohnConnor";
         String email1 = "johnconnor@gmail.com";
-        User expected1 = new User(login1, email1);
-        String login2 = "JohnConnor";
+        User actual1 = new User(login, email1);
         String email2 = "johnconnorgmail.com";
-        User expected2 = new User(login2, email2);
-        String login3 = "JohnConnor";
         String email3 = "johnconnor@gmailcom";
-        User expected3 = new User(login3, email3);
-        assertEquals(expected1.getEmail(), "johnconnor@gmail.com");
-        assertNull(expected2.getEmail());
-        assertNull(expected3.getEmail());
+        assertEquals(actual1.getEmail(), "johnconnor@gmail.com");
+        assertThrows(InvalidUserDataException.class, () ->  new User(login, email2));
+        assertThrows(InvalidUserDataException.class, () ->  new User(login, email3));
     }
 
     @Test
     public void shouldCheckWhatLoginAndEmailIsNotSame() {
         String login = "johnconnor@gmail.com";
         String email = "johnconnor@gmail.com";
-        User expected = new User(login, email);
-        assertNull(expected.getLogin(), expected.getEmail());
+        assertThrows(InvalidUserDataException.class, () ->  new User(login, email));
     }
 }

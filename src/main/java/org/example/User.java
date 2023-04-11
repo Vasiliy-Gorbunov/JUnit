@@ -1,5 +1,7 @@
 package org.example;
 
+import org.example.exceptions.InvalidUserDataException;
+
 import java.util.Objects;
 
 public class User {
@@ -9,10 +11,12 @@ public class User {
     public User() {
     }
 
-    public User(String login, String email) {
+    public User(String login, String email) throws InvalidUserDataException {
         if (email.contains("@") && email.contains(".") && !login.equals(email)) {
             this.login = login;
             this.email = email;
+        } else {
+            throw new InvalidUserDataException("Введены некорректные данные!");
         }
     }
 
